@@ -62,5 +62,9 @@ jobs:
         continue-on-error: true
       - run: pnpm test
         continue-on-error: true
+      - run: pnpm --filter @delegolabs/web test
+        continue-on-error: true
+      - run: pnpm --filter @delegolabs/web lint
+        continue-on-error: true
       - run: pnpm build
         continue-on-error: true
