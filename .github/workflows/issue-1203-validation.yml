@@ -22,8 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
       - run: pnpm --filter @delegolabs/web exec vitest run app/store/page.test.tsx app/store/MerchantDirectory.test.tsx lib/merchantDirectory.test.ts hooks/useMerchantDirectory.test.ts
       - run: pnpm --filter @delegolabs/web exec eslint app/store/page.tsx app/store/page.test.tsx app/store/MerchantDirectory.tsx app/store/MerchantDirectory.test.tsx lib/merchantDirectory.ts lib/merchantDirectory.test.ts --max-warnings=0
       - run: pnpm --filter @delegolabs/web exec prettier --check app/store/page.tsx app/store/page.test.tsx app/store/MerchantDirectory.tsx app/store/MerchantDirectory.test.tsx app/store/MerchantDirectory.module.css lib/merchantDirectory.ts lib/merchantDirectory.test.ts
@@ -56,8 +55,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
       - run: pnpm typecheck
         continue-on-error: true
       - run: pnpm lint

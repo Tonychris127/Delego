@@ -94,23 +94,21 @@ describe("directory metadata", () => {
     async (score) => {
       vi.stubGlobal(
         "fetch",
-        vi
-          .fn()
-          .mockResolvedValue(
-            new Response(
-              JSON.stringify([
-                {
-                  id: "a",
-                  name: "Acme",
-                  category: 42,
-                  description: {},
-                  verificationTier: "admin",
-                  reputationScore: score,
-                  totalOrdersCompleted: -1,
-                },
-              ])
-            )
+        vi.fn().mockResolvedValue(
+          new Response(
+            JSON.stringify([
+              {
+                id: "a",
+                name: "Acme",
+                category: 42,
+                description: {},
+                verificationTier: "admin",
+                reputationScore: score,
+                totalOrdersCompleted: -1,
+              },
+            ])
           )
+        )
       );
       const { merchants } = await fetchMerchantDirectory();
       expect(merchants[0]).toMatchObject({ id: "a", name: "Acme" });
