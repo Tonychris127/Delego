@@ -1,0 +1,68 @@
+name: Issue 1203 validation
+on:
+  push:
+    branches: [validation/1203-directory-resume-20261125]
+permissions:
+  contents: read
+env:
+  HUSKY: 0
+  NEXT_TELEMETRY_DISABLED: 1
+  NEXT_PUBLIC_API_URL: https://api.example.com
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @delegolabs/web exec vitest run app/store/page.test.tsx app/store/MerchantDirectory.test.tsx lib/merchantDirectory.test.ts hooks/useMerchantDirectory.test.ts
+      - run: pnpm --filter @delegolabs/web exec eslint app/store/page.tsx app/store/page.test.tsx app/store/MerchantDirectory.tsx app/store/MerchantDirectory.test.tsx lib/merchantDirectory.ts lib/merchantDirectory.test.ts --max-warnings=0
+      - run: pnpm --filter @delegolabs/web exec prettier --check app/store/page.tsx app/store/page.test.tsx app/store/MerchantDirectory.tsx app/store/MerchantDirectory.test.tsx app/store/MerchantDirectory.module.css lib/merchantDirectory.ts lib/merchantDirectory.test.ts
+        continue-on-error: true
+      - run: pnpm --filter @delegolabs/web exec playwright install --with-deps chromium
+      - run: node .validation/browser-check.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: merchant-directory-screenshots
+          include-hidden-files: true
+          path: |
+            .validation/*.png
+            .validation/browser-results.json
+  broad:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        revision: [baseline, fix]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.revision == 'baseline' && '21efb9314b49f1d76e7c579a343d70cb0dbf683f' || github.sha }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+        continue-on-error: true
+      - run: pnpm lint
+        continue-on-error: true
+      - run: pnpm test
+        continue-on-error: true
+      - run: pnpm build
+        continue-on-error: true
