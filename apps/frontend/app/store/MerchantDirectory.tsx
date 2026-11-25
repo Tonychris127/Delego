@@ -116,7 +116,18 @@ export function MerchantDirectory() {
         </button>
       </form>
       {loading ? (
-        <p role="status">Loading merchants…</p>
+        <div aria-busy="true" aria-label="Loading merchants">
+          <p role="status">Loading merchants...</p>
+          <div className={styles.grid} aria-hidden="true">
+            {[1, 2, 3, 4, 5, 6].map((index) => (
+              <div key={index} className="card skeleton">
+                <div className="skeleton-title" />
+                <div className="skeleton-text mt-2" />
+                <div className="skeleton-button mt-4" />
+              </div>
+            ))}
+          </div>
+        </div>
       ) : error ? (
         <p role="alert">
           Unable to load merchants. Please refresh the page to try again.

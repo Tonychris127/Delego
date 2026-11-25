@@ -178,4 +178,4 @@ Delego is open-source software licensed under the [MIT License](./LICENSE).
 
 Open `/store` to search merchant names or IDs and combine category, verification tier, and minimum reputation filters. Cards link to `/store/[merchantId]` and use shared verification and reputation badges.
 
-The existing `GET /merchants/directory` array accepts optional `description`, `category`, `verificationTier` (`verified`, `gold`, or `pro`), `reputationScore` (0?100), and `totalOrdersCompleted` alongside `id` and `name`. Missing or invalid metadata is shown as unpublished; reputation badges require a published completed-order count so their tooltips stay accurate.
+The existing `GET /merchants/directory` array accepts optional `description`, `category`, `verificationTier` (`verified`, `gold`, or `pro`), `reputationScore` (0 to 100), and `totalOrdersCompleted` alongside `id` and `name`. Missing or invalid metadata is shown as unpublished; reputation badges require a published completed-order count so their tooltips stay accurate.
